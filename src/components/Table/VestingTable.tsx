@@ -1,12 +1,12 @@
 const VestingTable = ({ header, data }: IVestingTable) => {
   return (
-    <div className='w-full'>
+    <div className='w-full overflow-x-auto'>
       {/* Table Header */}
-      <div className='border-b-orange border-b-[1px] flex'>
+      <div className='min-w-[900px] border-b-orange border-b-[1px] flex'>
         {header.map((th: string) => (
           <div
             key={th}
-            className='w-[180px] first:w-[140px] last-w-[220px] text-[18px] font-bold py-4'
+            className='w-[150px] xl:w-[180px] first:w-[100px] xl:first:w-[120px] last:w-[260px] text-sm md:text-base xl:text-[18px] font-bold py-4 truncate'
           >
             {th}
           </div>
@@ -15,12 +15,12 @@ const VestingTable = ({ header, data }: IVestingTable) => {
       {data.map((line: Array<Array<any>>, index) => (
         <div
           key={'line' + index}
-          className='border-b-orange border-b-[1px] flex'
+          className='border-b-orange border-b-[1px] flex min-w-[900px]'
         >
           {line.map((th: any) => (
             <div
               key={th}
-              className={`w-[180px] first:w-[140px] last:w-[400px] py-5 text-[17px] flex items-center ${
+              className={`w-[150px] xl:w-[180px] first:w-[100px] xl:first:w-[120px] last:w-[200px] xl:last:w-[300px] 2xl:last:w-[400px] py-2 md:py-5 text-xs md:text-sm xl:text-[17px] flex items-center ${
                 typeof th === 'string' ? '' : 'last:justify-end'
               }`}
             >

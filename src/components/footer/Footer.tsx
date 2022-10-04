@@ -43,13 +43,15 @@ const footer_data = [
 const Footer = () => {
   return (
     <footer className='bg-color-dark'>
-      <div className='max-w-screen-xl mx-auto px-[150px] pt-[75px] pb-[50px]'>
-        <div className='flex justify-between'>
-          <div className='w-[210px]'>
-            <Logo light />
-            <p className='block mt-[28px] text-light-grey text-base'>
-              The Crypto Advocates Knowledge Exchange
-            </p>
+      <div className='max-w-screen-xl mx-auto px-8 md:px-[60px] xl:px-[150px] pt-10 md:pt-[75px] pb-8 md:pb-[50px]'>
+        <div className='flex flex-col xl:flex-row justify-between'>
+          <div className='w-full justify-between xl:w-[210px] flex xl:flex-col'>
+            <div>
+              <Logo light />
+              <p className='block mt-4 xl:mt-[28px] text-light-grey text-sm xl:text-base'>
+                The Crypto Advocates Knowledge Exchange
+              </p>
+            </div>
             <div className='flex gap-5 mt-7'>
               <SocialButton type={FACEBOOK} />
               <SocialButton type={TWITTER} />
@@ -57,7 +59,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className='flex gap-[50px]'>
+          <div className='mt-8 xl:mt-0 flex flex-col sm:flex-row gap-2 md:gap-[25px] xl:gap-[50px]'>
             {footer_data.map((data) => (
               <FooterItem
                 key={data.heading}
@@ -67,7 +69,7 @@ const Footer = () => {
             ))}
           </div>
         </div>
-        <p className='text-light-grey text-center mt-[50px]'>
+        <p className='text-light-grey text-center mt-8 md:mt-[50px] text-sm xl:text-base'>
           Copyright 2021. All rights reserved. Designed & Developed by Luna.
         </p>
       </div>

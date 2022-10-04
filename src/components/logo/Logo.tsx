@@ -9,7 +9,11 @@ const Logo = ({ light }: ILogo) => {
         <div className='w-[6px] h-[6px] bg-green rounded-full' />
         <div className='w-[6px] h-[6px] bg-blue rounded-full' />
       </div>
-      <img src={light ? logo_text_light : logo_text} alt='logo text' />
+      <img
+        src={light ? logo_text_light : logo_text}
+        alt='logo text'
+        className=''
+      />
     </div>
   );
 };
