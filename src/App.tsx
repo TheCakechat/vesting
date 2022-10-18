@@ -1,6 +1,8 @@
 import { WalletConnect } from './components/button';
 import ThemeButton from './components/button/ThemeButton';
 import Footer from './components/footer';
+import TextInput from './components/input/TextInput';
+import SelectBox from './components/input/SelectBox';
 import Logo from './components/logo';
 import ColorfulMarkers from './components/markers';
 import VestingTable from './components/Table/VestingTable';
@@ -69,12 +71,13 @@ function App() {
             Choose an investment asset
           </label>
           <div className='mt-3 xl:mt-5 flex gap-8'>
-            <p className='h-[56px] w-[160px] flex items-center border-[1px] border-light-grey/60 px-5 rounded-md'>
-              Ethereum
-            </p>
-            <p className='h-[56px] w-[132px] flex items-center border-[1px] border-light-grey/60 px-5 rounded-md'>
-              0.1
-            </p>
+            <SelectBox
+              dataList={['Ethereum', 'USDT']}
+              value='Ethereum'
+              addClass='h-14 w-[160px]'
+              label='Asset type'
+            />
+            <TextInput addClass='h-14 w-[132px]' type='number' label='Amount' />
           </div>
           <div className='mt-8 md:mt-14'>
             <p className='text-sm xl:text-base'>Token allocation</p>

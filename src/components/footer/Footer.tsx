@@ -33,9 +33,12 @@ const footer_data = [
   {
     heading: 'Privacy',
     links: [
-      { text: 'Privacy policy', link: '#' },
-      { text: 'Terms & conditions', link: '#' },
-      { text: 'Cookies policy', link: '#' },
+      { text: 'Privacy policy', link: 'https://thecake.chat/privacy-policy/' },
+      {
+        text: 'Terms & conditions',
+        link: 'https://thecake.chat/terms-conditions/',
+      },
+      { text: 'Cookies policy', link: 'https://thecake.chat/cookies-policy/' },
     ],
   },
 ];
@@ -53,9 +56,15 @@ const Footer = () => {
               </p>
             </div>
             <div className='flex gap-5 mt-7'>
-              <SocialButton type={FACEBOOK} />
-              <SocialButton type={TWITTER} />
-              <SocialButton type={YOUTUBE} />
+              <a>
+                <SocialButton type={FACEBOOK} />
+              </a>
+              <a href='https://twitter.com/thecakechat'>
+                <SocialButton type={TWITTER} />
+              </a>
+              <a href='https://www.youtube.com/channel/UCd13YHkrNRAvw8s82kO0SWw'>
+                <SocialButton type={YOUTUBE} />
+              </a>
             </div>
           </div>
 

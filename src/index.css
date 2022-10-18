@@ -23,4 +23,8 @@
     -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.3);
     background-color: #232323;
   }
+
+  img {
+    -webkit-user-drag: none;
+  }
 }

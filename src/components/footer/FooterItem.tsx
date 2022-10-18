@@ -12,7 +12,7 @@ const FooterItem = ({ heading, links }: IFooterItem) => {
             key={heading + elem.text}
             className='hover:text-blue cursor-pointer transition-all duration-150 text-sm xl:text-base'
           >
-            {elem.text}
+            <a href={elem.link}>{elem.text}</a>
           </li>
         ))}
       </ul>
