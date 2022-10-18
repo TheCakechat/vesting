@@ -19,9 +19,9 @@ const SelectBox = ({
 
   return (
     <div
-      className={`relative border-[1px] border-light-grey/60 rounded-md ${
-        addClass ?? ''
-      }`}
+      className={`relative border-[1px] ${
+        open ? 'border-blue/60' : 'border-light-grey/60'
+      } rounded-md ${addClass ?? ''}`}
     >
       <span className='absolute px-1 bg-white -translate-y-1/2 left-4 text-light-grey text-sm'>
         {label ?? ''}
