@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import ThemeButton from '../../components/button/ThemeButton';
 import Footer from '../../components/footer';
 import SelectBox from '../../components/input/SelectBox';
@@ -7,6 +7,17 @@ import Logo from '../../components/logo';
 import ColorfulMarkers from '../../components/markers';
 import VestingTable from '../../components/Table/VestingTable';
 import WalletConnect from '../_components/WalletConnect';
+import TokenAllocation from '../_components/TokenAllocation';
+import TokenBalanceShow from '../_components/TokenBalanceShow';
+
+import useSeedAPrice from '../../hooks/useSeedAPrice';
+import useTokenAllowance from '../../hooks/useTokenAllowance';
+import useInvestWithEther from '../../hooks/useInvestWithEther';
+
+import { TOKEN_PRICE_DECIMAL } from '../../config/contract';
+import { CURRENCIES } from '../../constants';
+import { useEthers } from '@usedapp/core';
+import { toast } from 'react-toastify';
 
 const table_data: IVestingTable = {
   data: [
@@ -30,9 +41,34 @@ const table_data: IVestingTable = {
 };
 
 const InvestPage: React.FC = (): ReactElement => {
+  const { account } = useEthers();
+
+  const [currency, setCurrency] = useState<string>(CURRENCIES[0]);
+  const [amount, setAmount] = useState<number>(0);
+
+  const seedAPrice = useSeedAPrice();
+  const availableTokens = useTokenAllowance();
+  const { state, send } = useInvestWithEther();
+
+  const buyHandler = async () => {
+    if (account === undefined) {
+      toast.warning('Please connect your wallet');
+      return;
+    }
+    await send({ value: (amount * 10 ** 18).toString() });
+  };
+
+  useEffect(() => {
+    if (state) {
+      state.status === 'Exception' && toast.error(state.errorMessage);
+      state.status === 'Success' &&
+        toast.success('Thank you!!!, Successfully invested!!!');
+    }
+  }, [state]);
+
   return (
     <>
-      <div className='bg-[#F5F6FA] h-[300px] xl:h-[460px] relative'>
+      <div className='bg-[#F5F6FA] h-[360px] xl:h-[460px] relative'>
         <ColorfulMarkers />
         <div className='max-w-screen-xl mx-auto pt-[50px] pl-6 md:pl-[60px] xl:pl-[150px] pr-6 md:pr-10'>
           <div className='flex justify-between'>
@@ -55,11 +91,11 @@ const InvestPage: React.FC = (): ReactElement => {
         <dl className='mt-7 md:mt-9 text-sm xl:text-base'>
           <div className='flex'>
             <dt className='min-w-[184px]'>Availble tokens</dt>
-            <dd>x</dd>
+            <dd>{availableTokens?.toString() || 'Loading...'}</dd>
           </div>
           <div className='flex'>
             <dt className='min-w-[184px]'>Price per token</dt>
-            <dd>$0.00x</dd>
+            <dd>${seedAPrice / 10 ** TOKEN_PRICE_DECIMAL || 0}</dd>
           </div>
           <div className='flex'>
             <dt className='min-w-[184px]'>Vesting period</dt>
@@ -73,27 +109,44 @@ const InvestPage: React.FC = (): ReactElement => {
           </label>
           <div className='mt-3 xl:mt-5 flex gap-8'>
             <SelectBox
-              dataList={['Ethereum', 'USDT']}
-              value='Ethereum'
+              dataList={CURRENCIES}
+              value={currency}
+              onChange={(_currency: string) => setCurrency(_currency)}
               addClass='h-14 w-[160px]'
               label='Asset type'
             />
-            <TextInput addClass='h-14 w-[132px]' type='number' label='Amount' />
+            <TextInput
+              addClass='h-14 w-[132px]'
+              type='number'
+              label='Amount'
+              amount={amount}
+              onChange={(val: string | number) =>
+                setAmount(Math.max(Number(val), 0))
+              }
+            />
           </div>
-          <div className='mt-8 md:mt-14'>
-            <p className='text-sm xl:text-base'>Token allocation</p>
-            <p className='text-[22px] xl:text-[28px]'>Desup: 26,978,089</p>
-            <ThemeButton addClass='mt-9'>Purchase</ThemeButton>
-          </div>
+          <TokenAllocation amount={amount} price={seedAPrice} />
+          <ThemeButton
+            disabled={
+              amount === 0 ||
+              state.status === 'Mining' ||
+              state.status === 'PendingSignature'
+            }
+            onClick={buyHandler}
+            addClass='mt-9'
+          >
+            Purchase
+          </ThemeButton>
         </div>
 
         <div className='mt-[50px] md:mt-[100px] xl:mt-[140px] mb-[80px] md:mb-[180px] xl:mb-[340px]'>
           <h3 className='font-bold text-[32px] md:text-[36px] xl:text-[44px]'>
             My Vesting
           </h3>
-          <div className='mt-5 md:mt-9'>
+          <TokenBalanceShow address={account} />
+          {/* <div className='mt-5 md:mt-9'>
             <VestingTable {...table_data} />
-          </div>
+          </div> */}
         </div>
       </div>
       <Footer />

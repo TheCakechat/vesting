@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 interface ITextInput {
   label?: string;
   addClass?: string;
   type?: string;
-  onChange?: any;
+  onChange: any;
+  amount: number;
 }
 
-const TextInput = ({ addClass, label, type, onChange }: ITextInput) => {
+const TextInput = ({ addClass, label, type, onChange, amount }: ITextInput) => {
   const [focus, setFocus] = useState<boolean>(false);
+  const [value, setValue] = useState(amount);
+
+  useEffect(() => {
+    if (focus) return;
+    onChange(value);
+    return () => {};
+  }, [focus]);
 
   return (
     <span
@@ -20,9 +28,12 @@ const TextInput = ({ addClass, label, type, onChange }: ITextInput) => {
         {label ?? ''}
       </span>
       <input
+        value={value}
         onFocus={() => setFocus(true)}
         onBlur={() => setFocus(false)}
-        onChange={onChange ?? undefined}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          setValue(Number(e.target.value))
+        }
         type={type ?? 'text'}
         className='border-none outline-none w-full h-full rounded-md px-4'
       />

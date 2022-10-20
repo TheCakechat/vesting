@@ -3,6 +3,8 @@ interface ISocialButton {
 }
 
 interface IThemeButton {
+  disabled?: boolean;
   children: any;
   addClass?: string;
+  onClick?: any;
 }

@@ -68,7 +68,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className='mt-8 xl:mt-0 flex flex-col sm:flex-row gap-2 md:gap-[25px] xl:gap-[50px]'>
+          <div className='mt-8 xl:mt-0 flex flex-col sm:flex-row gap-2 justify-around md:gap-[25px] xl:gap-[50px]'>
             {footer_data.map((data) => (
               <FooterItem
                 key={data.heading}
