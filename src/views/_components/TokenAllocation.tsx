@@ -1,4 +1,5 @@
 import { ReactElement } from 'react';
+import formatNumber from '../../helper/number';
 import useTokenCountFromEther from '../../hooks/useTokenCountFromEther';
 
 interface ITokenAlloc {
@@ -13,7 +14,9 @@ const TokenAllocation = ({ amount, price }: ITokenAlloc): ReactElement => {
     <div className='mt-8 md:mt-14'>
       <p className='text-sm xl:text-base'>Token allocation</p>
       <p className='text-[22px] xl:text-[28px]'>
-        Desup: {desupCount?.toString() || 'Computing...'}
+        Desup:{' '}
+        {formatNumber.numberWithCommas(desupCount?.toString()) ||
+          'Computing...'}
       </p>
     </div>
   );

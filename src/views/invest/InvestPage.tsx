@@ -1,4 +1,8 @@
 import { ReactElement, useEffect, useState } from 'react';
+import { useEthers } from '@usedapp/core';
+import { toast } from 'react-toastify';
+
+// components
 import ThemeButton from '../../components/button/ThemeButton';
 import Footer from '../../components/footer';
 import SelectBox from '../../components/input/SelectBox';
@@ -8,37 +12,22 @@ import ColorfulMarkers from '../../components/markers';
 import VestingTable from '../../components/Table/VestingTable';
 import WalletConnect from '../_components/WalletConnect';
 import TokenAllocation from '../_components/TokenAllocation';
-import TokenBalanceShow from '../_components/TokenBalanceShow';
 
+// dapp custom hooks
 import useSeedAPrice from '../../hooks/useSeedAPrice';
-import useTokenAllowance from '../../hooks/useTokenAllowance';
+import useDesupTokenPublished from '../../hooks/useDesupTokenPublished';
 import useInvestWithEther from '../../hooks/useInvestWithEther';
+import useTGEDate from '../../hooks/useTGEDate';
+import useDesupAmountMinted from '../../hooks/useDesupAmountMinted';
 
-import { TOKEN_PRICE_DECIMAL } from '../../config/contract';
+import {
+  TOKEN_PRICE_DECIMAL,
+  vesting_contract_allowance,
+} from '../../config/contract';
 import { CURRENCIES } from '../../constants';
-import { useEthers } from '@usedapp/core';
-import { toast } from 'react-toastify';
+import formatNumber from '../../helper/number';
 
-const table_data: IVestingTable = {
-  data: [
-    ['26,978,089', 'Seed A', '12th Sept 2022', '245d 12h 09m', '0'],
-    [
-      '26,978,089',
-      'Seed A',
-      '12th Sept 2022',
-      '0',
-      '13,089,877',
-      <ThemeButton>Withdraw</ThemeButton>,
-    ],
-  ],
-  header: [
-    'Desup',
-    'Round',
-    'Purchased',
-    'Vesting remaining',
-    'Availble to withdraw',
-  ],
-};
+import coin_image from '../../assets/coins.webp';
 
 const InvestPage: React.FC = (): ReactElement => {
   const { account } = useEthers();
@@ -47,7 +36,13 @@ const InvestPage: React.FC = (): ReactElement => {
   const [amount, setAmount] = useState<number>(0);
 
   const seedAPrice = useSeedAPrice();
-  const availableTokens = useTokenAllowance();
+  const tgeDate = useTGEDate();
+  const bool_published = useDesupTokenPublished();
+  const desup_total_minted = useDesupAmountMinted();
+  // const vestingSchedule = useVestingSchedule(0);
+
+  const vestingSchedule = 1209600 * 1000;
+
   const { state, send } = useInvestWithEther();
 
   const buyHandler = async () => {
@@ -72,14 +67,16 @@ const InvestPage: React.FC = (): ReactElement => {
         <ColorfulMarkers />
         <div className='max-w-screen-xl mx-auto pt-[50px] pl-6 md:pl-[60px] xl:pl-[150px] pr-6 md:pr-10'>
           <div className='flex justify-between'>
-            <Logo />
+            <a href='https://thecake.chat'>
+              <Logo />
+            </a>
             <WalletConnect />
           </div>
           <h2 className='mt-8 md:mt-[50px] xl:mt-[100px] font-bold text-[38px] md:text-[48px] xl:text-[60px]'>
             Investors
           </h2>
           <p className='mt-5 md:mt-8 h-[52px] border-l-[2px] border-l-orange pl-8 max-w-[515px] text-xs md:text-sm xl:text-base'>
-            Participate in our investment rounds byt connecting your wallet,
+            Participate in our investment rounds by connecting your wallet,
             choosing your token allocation and sending Ethereum or Ethereum
             based stablecoins to our vesting contract
           </p>
@@ -91,7 +88,14 @@ const InvestPage: React.FC = (): ReactElement => {
         <dl className='mt-7 md:mt-9 text-sm xl:text-base'>
           <div className='flex'>
             <dt className='min-w-[184px]'>Availble tokens</dt>
-            <dd>{availableTokens?.toString() || 'Loading...'}</dd>
+            <dd>
+              {formatNumber.numberWithCommas(
+                (
+                  BigInt(vesting_contract_allowance) -
+                  BigInt(desup_total_minted ?? 0)
+                ).toString()
+              ) || 'Loading...'}
+            </dd>
           </div>
           <div className='flex'>
             <dt className='min-w-[184px]'>Price per token</dt>
@@ -143,10 +147,24 @@ const InvestPage: React.FC = (): ReactElement => {
           <h3 className='font-bold text-[32px] md:text-[36px] xl:text-[44px]'>
             My Vesting
           </h3>
-          <TokenBalanceShow address={account} />
-          {/* <div className='mt-5 md:mt-9'>
-            <VestingTable {...table_data} />
-          </div> */}
+          {bool_published ? (
+            <div className='mt-5 md:mt-9'>
+              <VestingTable
+                duration={vestingSchedule}
+                tge={Number(tgeDate?.toString() ?? '0')}
+                address={account}
+              />
+            </div>
+          ) : (
+            <div className='flex flex-col items-center pt-32'>
+              <img
+                className='w-[300px] grayscale-[0.6] opacity-90'
+                src={coin_image}
+                alt='not published'
+              />
+              <p className='mt-10 text-xl'>Token has not been published yet</p>
+            </div>
+          )}
         </div>
       </div>
       <Footer />

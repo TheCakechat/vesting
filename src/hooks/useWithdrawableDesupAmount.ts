@@ -3,13 +3,13 @@ import { useCall } from '@usedapp/core';
 import contractAbi from '../abi/DesupTokenVesting.json';
 import { VESTING_CONTRACT_ADDRESS } from '../config/contract';
 
-const useAvailableDesup = (address: string | undefined) => {
+const useWithdrawableDesup = (address: string | undefined) => {
   if (address === undefined) return 0;
 
   const { value, error } =
     useCall({
       contract: new Contract(VESTING_CONTRACT_ADDRESS, contractAbi.abi),
-      method: 'getAvailableAmount',
+      method: 'getWithdrawableAmount',
       args: [address],
     }) || {};
 
@@ -21,4 +21,4 @@ const useAvailableDesup = (address: string | undefined) => {
   return value?.[0];
 };
 
-export default useAvailableDesup;
+export default useWithdrawableDesup;

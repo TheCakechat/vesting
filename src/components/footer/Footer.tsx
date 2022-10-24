@@ -48,14 +48,14 @@ const Footer = () => {
     <footer className='bg-color-dark'>
       <div className='max-w-screen-xl mx-auto px-8 md:px-[60px] xl:px-[150px] pt-10 md:pt-[75px] pb-8 md:pb-[50px]'>
         <div className='flex flex-col xl:flex-row justify-between'>
-          <div className='w-full justify-between xl:w-[210px] flex xl:flex-col'>
+          <div className='w-full justify-between xl:w-[210px] flex xl:flex-col items-end md:items-start'>
             <div>
               <Logo light />
               <p className='block mt-4 xl:mt-[28px] text-light-grey text-sm xl:text-base'>
                 The Crypto Advocates Knowledge Exchange
               </p>
             </div>
-            <div className='flex gap-5 mt-7'>
+            <div className='flex gap-5 mt-0 md:mt-7'>
               <a>
                 <SocialButton type={FACEBOOK} />
               </a>

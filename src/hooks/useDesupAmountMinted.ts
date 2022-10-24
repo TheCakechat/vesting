@@ -3,14 +3,12 @@ import { useCall } from '@usedapp/core';
 import contractAbi from '../abi/DesupTokenVesting.json';
 import { VESTING_CONTRACT_ADDRESS } from '../config/contract';
 
-const useTotalDesupToken = (address: string | undefined) => {
-  if (address === undefined) return 0;
-
+const useDesupAmountMinted = () => {
   const { value, error } =
     useCall({
       contract: new Contract(VESTING_CONTRACT_ADDRESS, contractAbi.abi),
-      method: 'getTotalAmount',
-      args: [address],
+      method: 'getTotalMintedDesupTokenAmount',
+      args: [],
     }) || {};
 
   if (error) {
@@ -21,4 +19,4 @@ const useTotalDesupToken = (address: string | undefined) => {
   return value?.[0];
 };
 
-export default useTotalDesupToken;
+export default useDesupAmountMinted;
